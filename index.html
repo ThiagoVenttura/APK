@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Relógio com Visual do Dia</title>
+  <style>
+    html, body {
+      height: 100%;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      transition: background-image 1s;
+      font-family: Arial, sans-serif;
+      text-align: center;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      background-size: cover;
+      background-position: center;
+      background-repeat: no-repeat;
+      color: white;
+      text-shadow: 1px 1px 2px black;
+    }
+
+    @media (max-width: 768px) {
+      body {
+        font-size: 28px;
+        padding: 20px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <h1 id="Titulo">Bem-vindo(a)!</h1>
+  <p id="hora"></p>
+  <p id="Date"></p>
+  <p id="frase"></p>
+
+  <script>
+    let horaAnterior = -1;
+
+    function trocar() {
+      const agora = new Date();
+      const hora = agora.getHours();
+      const minutos = agora.getMinutes().toString().padStart(2, "0");
+      const segundos = agora.getSeconds().toString().padStart(2, "0");
+
+      document.getElementById("hora").innerText = `Hora atual: ${hora.toString().padStart(2, "0")}:${minutos}:${segundos}`;
+
+      if (hora !== horaAnterior) {
+        const dataFormada = agora.toLocaleDateString("pt-BR", {
+          weekday: 'long',
+          year: 'numeric',
+          month: 'long',
+          day: 'numeric'
+        });
+
+        let mensagem, imagemSrc, frase;
+
+        if (hora >= 6 && hora < 12) {
+          mensagem = "Bom dia! ☀️";
+          imagemSrc = 'dia.jpg';
+          frase = "O dia já começou!";
+        } else if (hora >= 12 && hora < 18) {
+          mensagem = "Boa tarde! ⛅";
+          imagemSrc = 'tarde.jpg';
+          frase = "bora tomar um café?";
+        } else if (hora >= 18 && hora < 23) {
+          mensagem = "Boa noite! 😴";
+          imagemSrc = 'noite.jpg';
+          frase = "A noite chegou, hora de descansar!";
+        } else {
+          mensagem = "Boa madrugada! 🌙";
+          imagemSrc = 'madruga.jpg';
+          frase = "Ainda acordado? aí e fica dificil!";
+        }
+
+        document.getElementById("Titulo").innerText = mensagem;
+        document.getElementById("Date").innerText = `Data: ${dataFormada}`;
+        document.getElementById("frase").innerHTML = frase;
+        document.body.style.backgroundImage = `url('${imagemSrc}')`;
+
+        horaAnterior = hora;
+      }
+    }
+
+    setInterval(trocar, 1000);
+    trocar();
+  </script>
+</body>
+</html>
